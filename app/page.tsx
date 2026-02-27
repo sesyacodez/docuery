@@ -1,10 +1,10 @@
-import Image from "next/image";
+import Chat from "./components/chat/chat";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <h1 className="text-docuery">Docuery</h1>
+    <div className="h-[100dvh] min-h-[100svh] overflow-hidden bg-zinc-50 px-4 pt-24 font-sans">
+      <main className="mx-auto flex h-full min-h-0 w-full max-w-5xl items-stretch justify-center">
+        <Chat />
       </main>
     </div>
   );
