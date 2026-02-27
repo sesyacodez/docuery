@@ -8,6 +8,8 @@ type ChatMessage = {
 	text: string;
 };
 
+const getFileKey = (file: File) => `${file.name}-${file.size}-${file.lastModified}`;
+
 const Chat = () => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [isDragging, setIsDragging] = useState(false);
@@ -38,9 +40,17 @@ const Chat = () => {
 
 		setFiles((previous) => {
 			const allFiles = [...previous, ...pdfFiles];
-			const deduped = Array.from(new Map(allFiles.map((file) => [`${file.name}-${file.size}`, file])).values());
+			const deduped = Array.from(new Map(allFiles.map((file) => [getFileKey(file), file])).values());
 			return deduped;
 		});
+	};
+
+	const removeFile = (fileKey: string) => {
+		setFiles((previous) => previous.filter((file) => getFileKey(file) !== fileKey));
+	};
+
+	const clearFiles = () => {
+		setFiles([]);
 	};
 
 	const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
@@ -66,7 +76,7 @@ const Chat = () => {
 			role: "assistant",
 			text: files.length
 				? "Got it. This is a local mock reply. Backend answer generation can be connected next."
-				: "Pleae upload a PDF document first to get started. This is a local mock reply. Backend answer generation can be connected next.",
+				: "Please upload a PDF document first to get started. This is a local mock reply. Backend answer generation can be connected next.",
 		};
 
 		setMessages((previous) => [...previous, userMessage, assistantMessage]);
@@ -99,6 +109,50 @@ const Chat = () => {
 				</div>
 				<p className="text-lg font-medium text-black">Drop a PDF here or click to upload</p>
 				<p className="mt-1 text-sm text-zinc-600">{fileSummary}</p>
+				{files.length > 0 && (
+					<div className="mt-4 w-full max-w-md text-left" onClick={(event) => event.stopPropagation()}>
+						<div className="mb-2 flex items-center justify-between">
+							<p className="text-sm font-medium text-zinc-700">Added documents</p>
+							<button
+								type="button"
+								onClick={(event) => {
+									event.preventDefault();
+									event.stopPropagation();
+									clearFiles();
+								}}
+								className="text-sm text-zinc-600 transition hover:text-zinc-800"
+							>
+								Clear all
+							</button>
+						</div>
+						<div className="max-h-28 space-y-2 overflow-y-auto">
+							{files.map((file) => {
+								const fileKey = getFileKey(file);
+
+								return (
+									<div
+										key={fileKey}
+										className="flex items-center justify-between rounded-md border border-docuery-light bg-white px-2 py-1"
+									>
+										<p className="truncate pr-2 text-sm text-zinc-700">{file.name}</p>
+										<button
+											type="button"
+											aria-label={`Remove ${file.name}`}
+											onClick={(event) => {
+												event.preventDefault();
+												event.stopPropagation();
+												removeFile(fileKey);
+											}}
+											className="text-sm text-zinc-600 transition hover:text-zinc-800"
+										>
+											✕
+										</button>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				)}
 			</label>
 
 			<div className="flex min-h-0 basis-[80%] flex-col overflow-hidden rounded-lg border border-docuery-light bg-white">
