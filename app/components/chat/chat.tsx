@@ -1,6 +1,6 @@
 "use client";
 
-import { DragEvent, FormEvent, useMemo, useRef, useState } from "react";
+import { DragEvent, SubmitEventHandler, useMemo, useRef, useState } from "react";
 
 import { UploadedPdf } from "../document_workspace/document_workspace";
 
@@ -43,7 +43,7 @@ const Chat = ({ files, activeFileId, onAddFiles, onRemoveFile, onClearFiles, onS
 		onAddFiles(event.dataTransfer.files);
 	};
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault();
 		const trimmed = draft.trim();
 
