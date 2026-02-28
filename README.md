@@ -6,6 +6,10 @@ Docuery is a simple RAG app for working with PDF documents.
 - Backend: FastAPI + LangChain + Chroma
 - Features: upload PDFs, ask questions, get cited answers
 
+
+https://github.com/user-attachments/assets/25f56b2f-0520-4276-b276-f645b8aa9253
+
+
 ## Repository layout
 
 ```text
