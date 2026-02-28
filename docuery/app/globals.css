@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+
+@theme {
+	--color-docuery: #171a57;
+	--color-docuery-hover: #1a008c;
+	--color-docuery-light: #d4d4d4;
+}
