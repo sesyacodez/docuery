@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Docuery MVP (Frontend)
 
-## Getting Started
+This is the Next.js frontend for a simple RAG MVP:
+- Upload PDF files
+- Ask questions about uploaded files
+- Get responses from a FastAPI + LangChain + Chroma backend
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 20+
+- Python 3.11 or 3.12
+- OpenAI key or OpenRouter key
+
+## 1) Run backend
+
+From the workspace root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd backend
+py -3.12 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set `OPENAI_API_KEY` in `backend/.env`, then run:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+uvicorn app.main:app --reload --port 8000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### OpenRouter example (gpt-oss-20b)
 
-## Learn More
+If using an OpenRouter key, set these values in `backend/.env`:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+OPENAI_API_KEY=your_openrouter_key
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+OPENAI_CHAT_MODEL=openai/gpt-oss-20b
+OPENAI_SITE_URL=http://localhost:3000
+OPENAI_APP_NAME=Docuery
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Notes:
+- Keep `OPENAI_EMBEDDING_MODEL` set to an embedding-capable model.
+- Your provider key must have quota for both embeddings and chat, or upload/chat will return `429`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 2) Run frontend
 
-## Deploy on Vercel
+In another terminal:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd docuery
+npm install
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Frontend runs on `http://localhost:3000`, backend on `http://localhost:8000`.
+
+## Optional frontend env
+
+If your backend URL is different, create `docuery/.env.local`:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+```
